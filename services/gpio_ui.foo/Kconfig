@@ -1,0 +1,7 @@
+config SERVICE_GPIO_UI
+	bool "GPIO User Interface support"
+	default n
+	help
+		This feature enables a simple user interface using GPIOs (LEDs and buttons).
+          
+		If you do not know what to do here, say N.

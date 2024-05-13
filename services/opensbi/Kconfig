@@ -1,0 +1,93 @@
+config SERVICE_OPENSBI
+	def_bool y
+	depends on OPENSBI
+	help
+                This feature enables support for OPENSBI.
+                
+		If you do not know what to do here, say Y.
+
+config SERVICE_OPENSBI_IHC
+	bool "OpenSBI IHC ecall support"
+	default y
+	depends on OPENSBI && USE_IHC
+	help
+                This feature enables support for IHC ecall service.
+                
+		If you do not know what to do here, say Y.
+
+config SERVICE_OPENSBI_RPROC
+	bool "Remote Proc ecall service support"
+	default y
+	depends on SERVICE_OPENSBI_IHC
+	help
+                This feature enables support for Remote Proc ecall service.
+                
+		If you do not know what to do here, say Y.
+
+config SERVICE_OPENSBI_CRYPTO
+	bool "User Crypto ecall service support"
+	default y
+	depends on OPENSBI && USE_USER_CRYPTO
+	help
+	  This feature enables support for user crypto ecall service.
+
+	  If you do not know what to do here, say Y.
+
+config OPENSBI_SRC_DIR
+	string
+	option env="OPENSBI_SRC_DIR"
+source "$(OPENSBI_SRC_DIR)/lib/sbi/Kconfig"
+
+config FDT_IPI
+	def_bool y
+
+config FDT_IPI_MSWI
+	def_bool y
+
+config FDT_IPI_PLICSW
+	def_bool y
+
+config FDT_IRQCHIP
+	def_bool y
+
+config FDT_IRQCHIP_PLIC
+	def_bool y
+
+config FDT_RESET
+	def_bool y
+
+config FDT_SERIAL
+	def_bool y
+
+config FDT_SERIAL_UART8250
+	def_bool y
+
+config FDT_TIMER
+	def_bool y
+
+config FDT_TIMER_MTIMER
+	def_bool y
+
+config SBI_ECALL_TIME
+	def_bool y
+
+config SBI_ECALL_RFENCE
+	def_bool y
+
+config SBI_ECALL_IPI
+	def_bool y
+
+config SBI_ECALL_HSM
+	def_bool y
+
+config SBI_ECALL_SRST
+	def_bool y
+
+config SBI_ECALL_PMU
+	def_bool n
+
+config SBI_ECALL_LEGACY
+	def_bool y
+
+config SBI_ECALL_VENDOR
+	def_bool y
