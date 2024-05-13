@@ -1,0 +1,183 @@
+menu "General Configuration Options"
+
+menu "Miscellaneous"
+
+config USE_PCIE
+	bool "Setup PCIe"
+	default y
+	help
+		Setup the PCIe prior to application load
+
+		If you don't know what to do here, say Y.
+
+menu "Enabled PCIe controllers"
+	visible if USE_PCIE
+
+config ENABLE_PCIE_CTRL_0
+	bool "Use PCIe controller 0"
+	default n
+		depends on USE_PCIE
+	help
+                This feature enables PCIe Controller 0.
+				Enable this feature if PCIe controller 0 is enabled in the FPGA design.
+
+		If you do not know what to do here, say N.
+
+config ENABLE_PCIE_CTRL_1
+	bool "Use PCIe controller 1"
+	default n
+		depends on USE_PCIE
+	help
+                This feature enables PCIe Controller 1.
+				Enable this feature if PCIe controller 1 is enabled in the FPGA design.
+
+		If you do not know what to do here, say N.
+
+endmenu
+
+
+config OPENSBI
+	def_bool y
+	help
+		This feature enables support for the RISC-V OpenSBI.
+
+		If you don't know what to do here, say Y.
+
+config USE_IHC
+	bool "Use Coreplex Inter-hart Communication"
+	default y
+	help
+		Enable Coreplex Inter-Hart Communication (IHC)
+
+config USE_USER_CRYPTO
+	bool "Use User Crypto"
+	default n
+	help
+		Enable User Crypto for Crypto signing, OpenSBI ecall service or both.
+
+		If you do not know what to do here, say Y.
+
+menu "Serial Port"
+config UART_SURRENDER
+	bool "HSS UART Surrender"
+	depends on OPENSBI
+        default n
+	help
+		If enabled, this feature "surrenders" MMUART0 after boot.  After this point,
+		HSS status messages will no longer be sent out MMUART0
+
+		If you do not know what to do here, say N.
+
+config UART_POST_BOOT
+    int "MMUART for HSS to use after booting"
+    default 0
+    range 0 4
+
+endmenu
+
+config ALLOW_COLDREBOOT
+	bool "Allow contexts to issue a cold reboot"
+	default y
+	help
+		If enabled, this feature globally allows a context to issue a
+		cold reboot ecall.
+
+		If disabled, only warm reboots will be permitted.
+
+		In addition to enabling this option, the permission to issue a cold
+		reboot must be granted to a context via the payload generator YAML file.
+
+		If you do not know what to do here, say Y.
+
+menu "Cold Reboot"
+	visible if ALLOW_COLDREBOOT
+
+config ALLOW_COLDREBOOT_ALWAYS
+	bool "Always allow contexts to issue a cold reboot"
+	default y
+	depends on ALLOW_COLDREBOOT
+	help
+		If enabled, this feature globally allows all contexts to issue a
+		cold reboot ecall, irrespective of payload.bin flag entitlements.
+
+		If you do not know what to do here, say Y.
+
+config ALLOW_COLDREBOOT_ON_OPENSBI_FAULT
+	bool "Trigger a cold reboot on OpenSBI fault"
+	default n
+	depends on ALLOW_COLDREBOOT && OPENSBI
+	help
+		If enabled, this feature globally allows all contexts to issue a
+		cold reboot on encountering an OpenSBI fault condition.
+
+		If you do not know what to do here, say N.
+
+config COLDREBOOT_ON_OPENSBI_FAULT_DELAY
+	int "Cold reboot on OpenSBI fault delay (in seconds)"
+        default 5
+        depends on ALLOW_COLDREBOOT_ON_OPENSBI_FAULT
+        range 0 3600
+	help
+                if ALLOW_COLDREBOOT_ON_OPENSBI_FAULT is enabled, this value determines
+                the time in seconds that a U54 ending the OpenSBI fault state before
+                triggering a cold reboot.
+endmenu
+
+endmenu
+
+menu "OpenSBI"
+	visible if OPENSBI
+
+config PROVIDE_DTB
+	bool "Provide a DTB for OpenSBI"
+	depends on OPENSBI
+	default n
+	help
+		This feature enabling the building in of a device tree blob and the provision
+		of this blob to OpenSBI via the a1 register.
+
+                If this isn't needed, it is possible to save some space by removing it.
+
+		If you don't know what to do here, say Y.
+
+config DEFAULT_DEVICE_TREE
+	string "microchip-mpfs-icicle-kit.dtb"
+	depends on PROVIDE_DTB
+	help
+		This option specifies the default Device Tree to be used.
+endmenu
+
+menu "Memory Options"
+config SKIP_DDR
+	bool "Skip DDR Training"
+	default n
+	help
+		This feature enables skipping DDR training for systems without DDR.
+
+		If you don't know what to do here, say N.
+
+config MEMTEST
+	bool "DDR Memory Tester"
+	depends on !SKIP_DDR
+	default n
+	help
+		This feature enables a simple walking 1's style memory tester for the DDR.
+
+		If you don't know what to do here, say N.
+
+config USE_PDMA
+	bool "Use PDMA for memory-to-memory transfers"
+	default y
+        help
+		Use the PDMA for memory to memory transfers.
+
+config INITIALIZE_MEMORIES
+	bool "Initialize memories to zero"
+	default y
+        help
+		Initialize memories to zero, to seed ECC.
+		
+		If you don't know what to do here, say N for now.
+endmenu
+
+endmenu
