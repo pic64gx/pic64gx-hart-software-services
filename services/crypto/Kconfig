@@ -1,0 +1,8 @@
+config SERVICE_CRYPTO
+	bool "Cryptography support"
+        depends on CRYPTO_USER_CRYPTO
+	default n
+	help
+                This feature enables support for crytographic signing of boot images.
+
+		If you do not know what to do here, say Y.
