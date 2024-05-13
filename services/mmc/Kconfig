@@ -1,0 +1,119 @@
+config SERVICE_MMC
+	bool "MMC support"
+	default y
+	help
+                This feature enables support for booting via MMC.
+
+		If you do not know what to do here, say Y.
+
+menu "MMC"
+	visible if SERVICE_MMC
+
+menu "MMC Mode"
+
+config SERVICE_MMC_MODE_EMMC
+	bool "Use eMMC"
+	default y
+        depends on SERVICE_MMC
+	help
+                This feature sets the MMC system to use eMMC.
+                This option is mutually exclusive with SERVICE_MMC_MODE_SDCARD.
+
+		If you do not know what to do here, say Y.
+
+config SERVICE_MMC_MODE_SDCARD
+	bool "Use SDCard"
+	default y
+        depends on SERVICE_MMC
+	help
+                This feature sets the MMC system to use SDCard.
+                This option is mutually exclusive with SERVICE_MMC_MODE_EMMC.
+
+		If you do not know what to do here, say N.
+
+endmenu
+
+menu "MMC Voltage"
+
+config SERVICE_MMC_BUS_VOLTAGE_1V8
+	bool "Use 1.8V Bus Voltage with MMC"
+	default n
+        depends on SERVICE_MMC
+	help
+                This feature sets the bus voltage for MMC to 1.8V.
+                This option is mutually exclusive with SERVICE_MMC_BUS_VOLTAGE_3V3.
+
+		If you do not know what to do here, say N.
+
+config SERVICE_MMC_BUS_VOLTAGE_3V3
+	bool "Use 3.3V Bus Voltage with MMC"
+	default y
+        depends on SERVICE_MMC && !SERVICE_MMC_BUS_VOLTAGE_1V8
+	help
+                This feature sets the bus voltage for MMC to 3.3V.
+                This option is mutually exclusive with SERVICE_MMC_BUS_VOLTAGE_1V8..
+
+		If you do not know what to do here, say Y.
+endmenu
+
+choice "MMC Speed"
+	prompt "SD/eMMC Bus Speed"
+	default SERVICE_MMC_HIGH_SPEED
+	depends on SERVICE_MMC
+
+config SERVICE_MMC_HIGH_SPEED
+        bool "Use MMC High Speed (HS) Mode"
+
+config SERVICE_MMC_DEFAULT_SPEED
+        bool "Use MMC Default Speed (DS) Mode"
+
+endchoice
+
+menu "SDIO Control"
+
+config SERVICE_MMC_FABRIC_SD_EMMC_DEMUX_SELECT_PRESENT
+	bool "SDIO register present"
+	default n
+        depends on SERVICE_MMC_MODE_SDCARD || SERVICE_MMC_MODE_EMMC
+	help
+                This feature will enable the use of a register in the FPGA fabric for SDIO control.
+
+		If this register is not present and this option is enabled the HSS will fail to boot.
+
+config SERVICE_MMC_FABRIC_SD_EMMC_DEMUX_SELECT_ADDRESS
+	hex "Memory mapped address of SDIO register"
+	default 0x4f000000
+	depends on SERVICE_MMC_FABRIC_SD_EMMC_DEMUX_SELECT_PRESENT
+        help
+                This value represents the memory mapped address of a register in the FPGA fabric.
+                This register is used to select between eMMC and SD card when a de-mux is present on a board.
+                
+endmenu
+
+config SERVICE_MMC_SPIN_TIMEOUT
+	bool "Apply timeout to spins in MMC driver"
+	default y
+        depends on SERVICE_MMC_MODE_SDCARD || SERVICE_MMC_MODE_EMMC
+	help
+                This feature will enable maximum loop checks on spins in the MMC driver.
+
+		If you do not know what to do here, say Y.
+
+config SERVICE_MMC_SPIN_TIMEOUT_ASSERT
+	bool "Assert if spin in MMC driver times out"
+	default n
+        depends on SERVICE_MMC_SPIN_TIMEOUT
+	help
+                This feature will enable an assert if maximum loop checks on spins in the MMC driver trigger.
+
+		If you do not know what to do here, say N.
+
+config SERVICE_MMC_SPIN_TIMEOUT_MAX_SPINS
+	int "Configure maximum permissible number of spins in MMC driver"
+        default 1000000
+        depends on SERVICE_MMC_SPIN_TIMEOUT
+        range 0 10000000
+	help
+                This value controls the max number of loop spins before trigger a timeout in the MMC driver.
+
+endmenu

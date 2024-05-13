@@ -1,0 +1,18 @@
+menu "Compression"
+config COMPRESSION
+	bool "Compression support"
+        depends on SERVICE_BOOT
+	default y
+	help
+		This feature enables support for compression of boot images
+
+		If you don't know what to do here, say Y.
+
+config COMPRESSION_MINIZ
+	bool "miniz (DEFLATE)"
+	depends on COMPRESSION
+	default y
+	help
+		This feature enables support for miniz compression, a fast lossless compression
+                library implementing DEFLATE.
+endmenu

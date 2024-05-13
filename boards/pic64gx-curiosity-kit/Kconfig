@@ -1,0 +1,4 @@
+menu "PIC64GX Curiosity-Kit Design Configuration Options"
+
+endmenu
+
