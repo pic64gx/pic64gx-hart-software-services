@@ -1249,22 +1249,22 @@
             <field Type="RW" name="MDIO1_FABRIC" offset="13" width="1">0x1</field>
           </register>
           <register address="0x00000204" description="Configures the IO Mux structure for each IO pad.  0  implies  SD/SDIO, 1 implies  EMMC, 2 implies QSPI, 3 implies SPI,4 implies USB,5 implies MMUART,6 implies I2C,7 implies CAN,8 implies MDIO,9 implies Miscellaneous,0xA implies Reserved (Equivalent to Tristate),0xB implies GPIO ,0xC implies Fabric-test,0xD implies Logic 0,0xE implies Logic 1, 0xF implies Tristate" name="IOMUX1_CR">
-            <field Type="RW" name="PAD0" offset="0" width="4">0x1</field>
-            <field Type="RW" name="PAD1" offset="4" width="4">0x1</field>
-            <field Type="RW" name="PAD2" offset="8" width="4">0x1</field>
-            <field Type="RW" name="PAD3" offset="12" width="4">0x1</field>
-            <field Type="RW" name="PAD4" offset="16" width="4">0x1</field>
-            <field Type="RW" name="PAD5" offset="20" width="4">0x1</field>
-            <field Type="RW" name="PAD6" offset="24" width="4">0x1</field>
-            <field Type="RW" name="PAD7" offset="28" width="4">0x1</field>
+            <field Type="RW" name="PAD0" offset="0" width="4">0x0</field>
+            <field Type="RW" name="PAD1" offset="4" width="4">0x0</field>
+            <field Type="RW" name="PAD2" offset="8" width="4">0x0</field>
+            <field Type="RW" name="PAD3" offset="12" width="4">0x0</field>
+            <field Type="RW" name="PAD4" offset="16" width="4">0x0</field>
+            <field Type="RW" name="PAD5" offset="20" width="4">0x0</field>
+            <field Type="RW" name="PAD6" offset="24" width="4">0x0</field>
+            <field Type="RW" name="PAD7" offset="28" width="4">0x0</field>
           </register>
           <register address="0x00000208" description="Configures the IO Mux structure for each IO pad.  0  implies  SD/SDIO, 1 implies  EMMC, 2 implies QSPI, 3 implies SPI,4 implies USB,5 implies MMUART,6 implies I2C,7 implies CAN,8 implies MDIO,9 implies Miscellaneous,0xA implies Reserved (Equivalent to Tristate),0xB implies GPIO ,0xC implies Fabric-test,0xD implies Logic 0,0xE implies Logic 1, 0xF implies Tristate" name="IOMUX2_CR">
-            <field Type="RW" name="PAD8" offset="0" width="4">0x1</field>
-            <field Type="RW" name="PAD9" offset="4" width="4">0x1</field>
-            <field Type="RW" name="PAD10" offset="8" width="4">0x1</field>
-            <field Type="RW" name="PAD11" offset="12" width="4">0x1</field>
-            <field Type="RW" name="PAD12" offset="16" width="4">0xB</field>
-            <field Type="RW" name="PAD13" offset="20" width="4">0xB</field>
+            <field Type="RW" name="PAD8" offset="0" width="4">0x0</field>
+            <field Type="RW" name="PAD9" offset="4" width="4">0x0</field>
+            <field Type="RW" name="PAD10" offset="8" width="4">0x0</field>
+            <field Type="RW" name="PAD11" offset="12" width="4">0x0</field>
+            <field Type="RW" name="PAD12" offset="16" width="4">0x0</field>
+            <field Type="RW" name="PAD13" offset="20" width="4">0x0</field>
           </register>
           <register address="0x0000020C" description="Configures the IO Mux structure for each IO pad.  0  implies  SD/SDIO, 1 implies  EMMC, 2 implies QSPI, 3 implies SPI,4 implies USB,5 implies MMUART,6 implies I2C,7 implies CAN,8 implies MDIO,9 implies Miscellaneous,0xA implies Reserved (Equivalent to Tristate),0xB implies GPIO ,0xC implies Fabric-test,0xD implies Logic 0,0xE implies Logic 1, 0xF implies Tristate" name="IOMUX3_CR">
             <field Type="RW" name="PAD14" offset="0" width="4">0x4</field>
@@ -1436,9 +1436,9 @@
             <field Type="R" name="RESERVED" offset="15" width="17">0x0</field>
           </register>
           <register address="0x0000027C" description="Indicates if eMMC is configured for use (bit 0 == 1), If SD is configued for use (bit 1 == 1). Bit 2 indicates which one should be used by default on MSS embedded software startup ( bit2 == 0,  implies  default is eMMC, bit2 == 1,  implies  default is SD). The eMMC configuration is always defined in xml tag (io_mux, the SD configuration is always defined in xml tag (io_mux_alt). All other elements in the (o_mux) and (io_mux_alt) not releating to eMMC/SD differences should be the same values." name="MSSIO_CONFIGURATION_OPTIONS">
-            <field Type="RW" name="EMMC_CONFIGURED" offset="0" width="1">0x1</field>
-            <field Type="RW" name="SD_CONFIGURED" offset="1" width="1">0x0</field>
-            <field Type="RW" name="DEFAULT_ON_START" offset="2" width="1">0x0</field>
+            <field Type="RW" name="EMMC_CONFIGURED" offset="0" width="1">0x0</field>
+            <field Type="RW" name="SD_CONFIGURED" offset="1" width="1">0x1</field>
+            <field Type="RW" name="DEFAULT_ON_START" offset="2" width="1">0x1</field>
           </register>
           <register address="0x0000027C" description="To limit the number of interrupts fed to the PLINT, the seventy GPIO interrupts (GPIO0=14, GPIO1=24, GPIO2=32) are reduced down to 41 interrupts by OR'ing some together. There is some flexibility regarding which interrupts are OR'd or are direct. This selection is controlled by a 32-bit system register(GPIO_INTERRUPT_FAB_CR). For example, if bit 0 of the register is set to 1, gpio2_0 is chosen as a direct interrupt on the PLIC and gpio0_0 will be OR'd with any other non-direct gpio0 interrupts. Please see the GPIO driver for more details on using GPIO interrupts." name="GPIO_INTERRUPT_FAB_CR">
             <field Type="RW" name="GPIO0_0_OR_GPIO2_0" offset="0" width="1">0x0</field>
@@ -4300,12 +4300,12 @@
             <field Type="RO" name="RESERVED1" offset="4" width="28">0x0</field>
           </register>
           <register address="0x00000000" description="MSS peripherals configured in this instance of MSS Configurator generated output. 1 implies it has been configured, 0 it has not been configured." name="CONFIGURED_PERIPHERALS">
-            <field Type="RW" name="EMMC" offset="0" width="1">0x1</field>
-            <field Type="RW" name="SD_SDIO" offset="1" width="1">0x0</field>
-            <field Type="RW" name="USB" offset="2" width="1">0x1</field>
+            <field Type="RW" name="EMMC" offset="0" width="1">0x0</field>
+            <field Type="RW" name="SD_SDIO" offset="1" width="1">0x1</field>
+            <field Type="RW" name="USB" offset="2" width="1">0x0</field>
             <field Type="RW" name="MAC0" offset="3" width="1">0x1</field>
-            <field Type="RW" name="MAC1" offset="4" width="1">0x1</field>
-            <field Type="RW" name="QSPI" offset="5" width="1">0x1</field>
+            <field Type="RW" name="MAC1" offset="4" width="1">0x0</field>
+            <field Type="RW" name="QSPI" offset="5" width="1">0x0</field>
             <field Type="RW" name="SPI0" offset="6" width="1">0x1</field>
             <field Type="RW" name="SPI1" offset="7" width="1">0x1</field>
             <field Type="RW" name="MMUART0" offset="8" width="1">0x1</field>

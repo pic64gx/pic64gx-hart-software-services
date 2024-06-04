@@ -1017,7 +1017,7 @@ bool HSS_Boot_ValidateImage(struct HSS_BootImage *pImage)
         // this print...
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Warray-bounds"
-            mHSS_DEBUG_PRINTF(LOG_NORMAL, "Boot image set name: \"PIC64GX-HSS:U-Boot\"\n");
+            mHSS_DEBUG_PRINTF(LOG_NORMAL, "Boot image set name: \"%s\"\n", pImage->set_name);
 #  pragma GCC diagnostic pop
 
 #  if defined(CONFIG_SERVICE_BOOT_CUSTOM_FLOW)

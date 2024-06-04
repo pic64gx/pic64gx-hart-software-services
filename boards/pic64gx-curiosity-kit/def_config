@@ -4,10 +4,10 @@
 #
 
 #
-# Curiosity-Kit Design Configuration Options
+# PIC64GX Curiosity-Kit Design Configuration Options
 #
 CONFIG_SOC_FPGA_DESIGN_XML="boards/pic64gx-curiosity-kit/soc_fpga_design/xml/TODO_mss_cfg.xml"
-# end of Curiosity-Kit Design Configuration Options
+# end of PIC64GX Curiosity-Kit Design Configuration Options
 # end of Board/Design Configuration Options
 
 #
@@ -21,14 +21,13 @@ CONFIG_SERVICE_BOOT=y
 #
 # CONFIG_SERVICE_BOOT_USE_PAYLOAD is not set
 # CONFIG_SERVICE_BOOT_CUSTOM_FLOW is not set
-CONFIG_SERVICE_BOOT_DDR_TARGET_ADDR=0x103FC00000
+CONFIG_SERVICE_BOOT_DDR_TARGET_ADDR=0xBFC00000
 CONFIG_SERVICE_BOOT_MMC_USE_GPT=y
 # end of Boot Service
 
 CONFIG_SERVICE_DDR=y
 CONFIG_SERVICE_GOTO=y
 CONFIG_SERVICE_HEALTHMON=y
-# CONFIG_SERVICE_GPIO_UI is not set
 CONFIG_SERVICE_IPI_POLL=y
 CONFIG_SERVICE_MMC=y
 
@@ -137,7 +136,7 @@ CONFIG_USE_IHC=y
 # Serial Port
 #
 # CONFIG_UART_SURRENDER is not set
-CONFIG_UART_POST_BOOT=1
+CONFIG_UART_POST_BOOT=0
 # end of Serial Port
 
 #
