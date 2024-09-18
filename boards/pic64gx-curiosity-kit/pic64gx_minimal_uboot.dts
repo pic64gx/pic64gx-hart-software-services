@@ -79,12 +79,8 @@
 			disable-wp;
 			cap-sd-highspeed;
 			cap-mmc-highspeed;
-			mmc-ddr-1_8v;
-			mmc-hs200-1_8v;
-			sd-uhs-sdr12;
-			sd-uhs-sdr25;
-			sd-uhs-sdr50;
-			sd-uhs-sdr104;
+			sdhci-caps-mask = <0x7 0x0>;
+			no-1-8-v;
 		};
 
 		uart1: serial@20100000 {

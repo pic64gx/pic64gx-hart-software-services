@@ -339,11 +339,7 @@ set_bank2_and_bank4_volts
 
  *
  */
-uint8_t
-switch_mssio_config
-(
-        MSS_IO_OPTIONS option
-)
+uint8_t switch_mssio_config(MSS_IO_OPTIONS option)
 ;
 
 /***************************************************************************//**

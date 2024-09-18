@@ -149,8 +149,9 @@ static bool mmc_init_emmc(void)
 
     if (result) {
         result = switch_mssio_config(EMMC_MSSIO_CONFIGURATION);
-    } else {
-        mHSS_DEBUG_PRINTF(LOG_ERROR, "switch_mssio_config returned false %d\n", result);
+        if (!result) {
+            mHSS_DEBUG_PRINTF(LOG_ERROR, "switch_mssio_config returned false %d\n", result);
+        }
     }
 
     /* we will attempt to switch anyway as default may be eMMC */
@@ -170,12 +171,19 @@ static bool mmc_init_sdcard(void)
     {
         .card_type = MSS_MMC_CARD_TYPE_SD,
         .data_bus_width = MSS_MMC_DATA_WIDTH_4BIT,
-#if IS_ENABLED(CONFIG_SERVICE_MMC_DEFAULT_SPEED)
+#if defined(CONFIG_SERVICE_MMC_BUS_VOLTAGE_1V8)
+        .bus_voltage = MSS_MMC_1_8V_BUS_VOLTAGE,
         .bus_speed_mode = MSS_SDCARD_MODE_DEFAULT_SPEED,
         .clk_rate = MSS_MMC_CLOCK_25MHZ,
-#else
+#elif defined(CONFIG_SERVICE_MMC_BUS_VOLTAGE_3V3)
+        .bus_voltage = MSS_MMC_3_3V_BUS_VOLTAGE,
+#  if IS_ENABLED(CONFIG_SERVICE_MMC_DEFAULT_SPEED)
+        .bus_speed_mode = MSS_SDCARD_MODE_DEFAULT_SPEED,
+        .clk_rate = MSS_MMC_CLOCK_25MHZ,
+#  else
         .bus_speed_mode = MSS_SDCARD_MODE_HIGH_SPEED,
         .clk_rate = MSS_MMC_CLOCK_50MHZ,
+#  endif
 #endif
     };
 
@@ -184,8 +192,9 @@ static bool mmc_init_sdcard(void)
 
     if (result) {
         result = switch_mssio_config(SD_MSSIO_CONFIGURATION);
-    } else {
-        mHSS_DEBUG_PRINTF(LOG_ERROR, "switch_mssio_config returned false %d\n", result);
+        if (!result) {
+            mHSS_DEBUG_PRINTF(LOG_ERROR, "switch_mssio_config returned false %d\n", result);
+        }
     }
 
     /* we will attempt to switch anyway as default may be SD */
