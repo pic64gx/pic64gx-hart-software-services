@@ -100,7 +100,9 @@ Download and untar the PIC64GX OpenOCD release from https://github.com/microchip
     $ cd xpack-openocd-0.12.0-3
     $ ./bin/openocd --command "set DEVICE pic64gx" -f board/microchip_riscv_efp5.cfg
 
-In a separate terminal, connect to the board from gdb
+In a separate terminal, launch gdb-multiarch and execute the following commands
+to connect to the target, stop it, and upload the HSS binary:
+
     target remote :3333
     monitor reset halt
     load /path/to/hss-envm-wrapper.elf
