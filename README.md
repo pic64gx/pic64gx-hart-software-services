@@ -95,10 +95,10 @@ Clone from https://github.com/pic64gx/pic64gx-hart-software-services.git and the
 
 ### Programming
 
-Download and untar the PIC64GX OpenOCD release from https://github.com/microchip-fpga/openocd/releases/tag/v0.12.0-mchp.0.0.1
+Download and untar the PIC64GX OpenOCD release from https://github.com/microchip-fpga/openocd/releases/tag/v0.12.0-mchp.0.0.3
 
-    $ cd xpack-openocd-0.12.0-3
-    $ ./bin/openocd --command "set DEVICE pic64gx" -f board/microchip_riscv_efp5.cfg
+    $ cd xpack-openocd-0.12.0-4
+    $ ./bin/openocd --command "set DEVICE pic64gx" -f board/microchip_pic64gx_curiosity.cfg
 
 In a separate terminal, connect to the board from gdb
     target remote :3333
