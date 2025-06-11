@@ -14,10 +14,6 @@
 #include <sbi/sbi_ecall.h>
 #include <sbi/sbi_ecall_interface.h>
 #include <sbi/sbi_error.h>
-//#include <sbi/sbi_trap.h>
-//#include <sbi/sbi_version.h>
-//#include <sbi/riscv_asm.h>
-//#include <sbi/riscv_barrier.h>
 
 
 #include "opensbi_service.h"
@@ -40,16 +36,18 @@
 #  include "opensbi_crypto_ecall.h"
 #endif
 
+#include "opensbi_suspend_ecall.h"
+
 #include "hss_boot_service.h"
 
 int HSS_SBI_ECALL_Handler(long extid, long funcid,
     const struct sbi_trap_regs *regs, unsigned long *out_val, struct sbi_trap_info *out_trap)
 {
-    int result = 0;
-    uint32_t index;
+    int result = SBI_ERR_FAILED;
 
     switch (funcid) {
-        // MiV IHC functions
+        //
+        // IPC Functions
         case SBI_EXT_IPC_PROBE:
             __attribute__((fallthrough)); // deliberate fallthrough
         case SBI_EXT_IPC_CH_INIT:
@@ -64,6 +62,8 @@ int HSS_SBI_ECALL_Handler(long extid, long funcid,
 #endif
             break;
 
+        //
+        // RemoteProc
         case SBI_EXT_RPROC_STATE:
             __attribute__((fallthrough)); // deliberate fallthrough
         case SBI_EXT_RPROC_START:
@@ -75,6 +75,8 @@ int HSS_SBI_ECALL_Handler(long extid, long funcid,
             break;
 
 #if IS_ENABLED(CONFIG_USE_USER_CRYPTO) && IS_ENABLED(CONFIG_SERVICE_OPENSBI_CRYPTO)
+        //
+        // User Crypto
         case SBI_EXT_CRYPTO_INIT:
             __attribute__((fallthrough)); // deliberate fallthrough
         case SBI_EXT_CRYPTO_SERVICES_PROBE:
@@ -87,11 +89,10 @@ int HSS_SBI_ECALL_Handler(long extid, long funcid,
         //
         // HSS functions
         case SBI_EXT_HSS_REBOOT:
-            IPI_MessageAlloc(&index);
-            IPI_MessageDeliver(index, HSS_HART_E51, IPI_MSG_BOOT_REQUEST, 0u, NULL, NULL);
-            result = SBI_OK;
+            result = HSS_OpenSBI_Reboot();
             break;
 
+        //
         default:
             result = SBI_ENOTSUPP;
     };

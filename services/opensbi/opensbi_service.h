@@ -1,5 +1,5 @@
-#ifndef HSS_OPENSBI_SERVICE_H
-#define HSS_OPENSBI_SERVICE_H
+#ifndef OPENSBI_SERVICE_H
+#define OPENSBI_SERVICE_H
 
 /*******************************************************************************
  * Copyright 2019-2021 Microchip Technology Inc.
@@ -45,16 +45,21 @@ extern "C" {
 enum IPIStatusCode HSS_OpenSBI_IPIHandler(TxId_t transaction_id, enum HSSHartId source,
     uint32_t immediate_arg, void *p_extended_buffer_in_ddr, void *p_ancilliary_buffer_in_ddr);
 void HSS_OpenSBI_Setup(void);
-void HSS_OpenSBI_Reboot(void);
+int HSS_OpenSBI_Reboot(void);
+int HSS_OpenSBI_Resume(void);
 
 void pic64gx_domains_register_hart(int hartid, int boot_hartid);
 void pic64gx_domains_deregister_hart(int hartid);
 
 void pic64gx_domains_register_boot_hart(char *pName, u32 hartMask, int boot_hartid,
     u32 privMode, void * entryPoint, void * pArg1, bool allow_cold_reboot, bool allow_warm_reboot);
+size_t pic64gx_domains_get_count(void);
 void pic64gx_mark_hart_as_booted(int hartid);
 bool pic64gx_is_last_hart_ready(void);
 bool pic64gx_is_hart_using_opensbi(int hartid);
+
+void pic64gx_system_suspend(void);
+void pic64gx_system_resume(void);
 bool pic64gx_are_harts_in_same_domain(int hartid1, int hartid2);
 bool pic64gx_is_cold_reboot_allowed(int hartid);
 bool pic64gx_is_warm_reboot_allowed(int hartid);
