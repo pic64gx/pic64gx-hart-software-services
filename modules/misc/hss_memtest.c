@@ -58,7 +58,7 @@ static void log_error_(const int count, volatile void *ptr, const uint64_t value
 static bool check_if_interrupted(void)
 {
     uint8_t rx_char;
-    return (uart_getchar(&rx_char, 0, false) && ((rx_char == '\003') || (rx_char == '\033')));
+    return (uart_getchar(HSS_HART_E51, &rx_char, 0, false) && ((rx_char == '\003') || (rx_char == '\033')));
 }
 
 static uint64_t* HSS_MemTestAddressBus(volatile uint64_t *baseAddr, const size_t numBytes)

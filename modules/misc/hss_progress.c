@@ -65,7 +65,7 @@ bool HSS_ShowTimeout(char const * const msg, uint32_t timeout_sec, uint8_t *pRcv
     mHSS_PRINTF("Timeout in %u second%s\n", timeout_sec, timeout_sec == 1 ? "" : "s");
     mHSS_PUTC('.');
 
-    if (uart_getchar(pRcvBuf, timeout_sec, true)) {
+    if (uart_getchar(HSS_HART_E51, pRcvBuf, timeout_sec, true)) {
         mHSS_DEBUG_PRINTF(LOG_NORMAL, "Character %u pressed\n", *pRcvBuf);
 
         if (*pRcvBuf != 27) { // ESC => done

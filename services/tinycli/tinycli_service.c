@@ -182,7 +182,7 @@ static void tinycli_readline_handler(struct StateMachine * const pMyMachine)
 
     static bool escapeActive = false;
 
-    if (uart_getchar(cBuf, 0, false)) {
+    if (uart_getchar(HSS_HART_E51, cBuf, 0, false)) {
 	if (escapeActive) {
 		switch (cBuf[0]) {
 		case '[':
@@ -353,7 +353,7 @@ static void tinycli_usbdmsc_handler(struct StateMachine * const pMyMachine)
 
     done = !USBDMSC_IsActive();
 
-    if (!done && (uart_getchar(cBuf, 0, false))) {
+    if (!done && (uart_getchar(HSS_HART_E51, cBuf, 0, false))) {
         done = (cBuf[0] == '\003') || (cBuf[0] == '\033');
     }
 

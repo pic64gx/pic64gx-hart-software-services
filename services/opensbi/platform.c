@@ -63,6 +63,7 @@
 
 #include "opensbi_service.h"
 #include "opensbi_ecall.h"
+#include "uart_helper.h"
 
 #include "pic64gx_reg_map.h"
 
@@ -239,7 +240,6 @@ static void pic64gx_console_putc(char ch)
 #else
         {
 #endif
-            int uart_putc(int hartid, const char ch); //TBD
             uart_putc(hartid, ch);
         }
     }
@@ -251,10 +251,10 @@ static void pic64gx_console_putc(char ch)
 static int pic64gx_console_getc(void)
 {
     int result = GETC_EOF;
-    bool uart_getchar(uint8_t *pbuf, int32_t timeout_sec, bool do_sec_tick);
+    u32 hartid = current_hartid();
 
     uint8_t rcvBuf;
-    if (uart_getchar(&rcvBuf, NO_BLOCK, FALSE)) {
+    if (uart_getchar(hartid, &rcvBuf, NO_BLOCK, FALSE)) {
         result = rcvBuf;
     }
 
