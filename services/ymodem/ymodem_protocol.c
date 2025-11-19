@@ -77,7 +77,7 @@ static int16_t getchar_with_timeout_(int32_t timeout_sec)
     uint8_t rx_byte = 0;
     int16_t result = 0;
 
-    bool retval = uart_getchar(&rx_byte, timeout_sec, false);
+    bool retval = uart_getchar(HSS_HART_E51, &rx_byte, timeout_sec, false);
 
     if (retval) {
         result = rx_byte;
