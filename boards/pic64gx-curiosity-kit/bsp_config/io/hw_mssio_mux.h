@@ -110,8 +110,8 @@ Logic 0,0xE implies Logic 1, 0xF implies Tristate */
 #if !defined (BSP_SETTING_IOMUX6_CR)
 /*Sets whether the MMC/SD Voltage select lines are inverted on entry to the
 IOMUX structure */
-#define BSP_SETTING_IOMUX6_CR    0x00000001UL
-    /* VLT_SEL                           [0:1]   RW value= 0x1 */
+#define BSP_SETTING_IOMUX6_CR    0x00000000UL
+    /* VLT_SEL                           [0:1]   RW value= 0x0 */
     /* VLT_EN                            [1:1]   RW value= 0x0 */
     /* VLT_CMD_DIR                       [2:1]   RW value= 0x0 */
     /* VLT_DIR_0                         [3:1]   RW value= 0x0 */
