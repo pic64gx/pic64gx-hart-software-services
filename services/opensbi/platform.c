@@ -681,6 +681,18 @@ bool pic64gx_is_first_boot(void)
     return (atomic_xchg(&coldboot_lottery, 1) == 0);
 }
 
+static uint32_t suspended_hartid = 0u;
+
+void pic64gx_set_suspended_hartid(uint32_t hartid)
+{
+    suspended_hartid = hartid;
+}
+
+u32 pic64gx_get_suspended_hartid(void)
+{
+    return suspended_hartid;
+}
+
 extern void pic64gx_hal_turn_ddr_selfrefresh_on(void);
 extern void pic64gx_hal_turn_ddr_selfrefresh_off(void);
 

@@ -28,6 +28,7 @@
 
 #include <u54_state.h>
 #include "hss_trigger.h"
+#include "opensbi_service.h"
 #include "opensbi_suspend_ecall.h"
 #include "pic64gx_reg_map.h"
 
@@ -38,6 +39,7 @@ int sbi_ecall_susp_handler(unsigned long extid, unsigned long funcid,
 
     switch (funcid) {
     case SBI_EXT_SUSP_SYSTEM_SUSPEND:
+        pic64gx_set_suspended_hartid(current_hartid());
         if (1 == pic64gx_domains_get_count()) {
            // Wait for all secondary harts to reach spin_forever (Idle) before touching DDR
            const struct sbi_domain *dom = sbi_domain_thishart_ptr();
@@ -68,8 +70,13 @@ int sbi_ecall_susp_handler(unsigned long extid, unsigned long funcid,
 
             HSS_Trigger_Clear(EVENT_SYSTEM_SUSPEND_RESUME);
             while (!HSS_Trigger_IsNotified(EVENT_SYSTEM_SUSPEND_RESUME)) {
-                ;
+                wfi();
             }
+            /* Clear our own MSIP so it doesn't fire as a spurious M-mode
+             * interrupt when sbi_hart_switch_mode() re-enables interrupts. */
+            volatile uint32_t * const msip =
+                (volatile uint32_t *)((uintptr_t)CLINT_BASE_ADDR + 4u * current_hartid());
+            *msip = (uint32_t)0u;
 
             pic64gx_system_resume();
 

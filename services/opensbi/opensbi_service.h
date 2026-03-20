@@ -60,6 +60,8 @@ bool pic64gx_is_hart_using_opensbi(int hartid);
 
 void pic64gx_system_suspend(void);
 void pic64gx_system_resume(void);
+void pic64gx_set_suspended_hartid(u32 hartid);
+u32 pic64gx_get_suspended_hartid(void);
 bool pic64gx_are_harts_in_same_domain(int hartid1, int hartid2);
 bool pic64gx_is_cold_reboot_allowed(int hartid);
 bool pic64gx_is_warm_reboot_allowed(int hartid);
