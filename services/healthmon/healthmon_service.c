@@ -67,16 +67,6 @@ struct StateMachine healthmon_service = {
     .pInstanceData     = NULL
 };
 
-enum CheckTypeEnum
-{
-    ABOVE_THRESHOLD,
-    BELOW_THRESHOLD,
-    ABOVE_OR_BELOW_THRESHOLD,
-    EQUAL_TO_VALUE,
-    NOT_EQUAL_TO_VALUE,
-    CHANGED_SINCE_LAST,
-};
-
 char const * const checkName[] = {
     "above threshold",
     "below threshold",
@@ -92,18 +82,7 @@ static void nop_trigger(uintptr_t pAddr)
      ;
 }
 
-static const struct HealthMonitor
-{
-    char const * const pName;
-    uintptr_t pAddr;
-    enum CheckTypeEnum checkType;
-    uint32_t maxValue;
-    uint32_t minValue;
-    uint8_t shift; // shift applied first...
-    uint64_t mask; // then mask
-    void (*triggerCallback)(uintptr_t pAddr);
-    uint32_t throttleScale; // times 1sec, to throttle console messages
-} monitors[] =
+static const struct HealthMonitor monitors[] =
 {
     { "IOSCB_PLL_MSS:PLL_CTRL",		0x3E001004, NOT_EQUAL_TO_VALUE, 1u,      0u, 25u, 1u,       nop_trigger, 1u },
     { "IOSCB_PLL_DDR:PLL_CTRL",		0x3E010004, NOT_EQUAL_TO_VALUE, 1u,      0u, 25u, 1u,       nop_trigger, 1u },
@@ -151,13 +130,7 @@ static const struct HealthMonitor
     { "L2:Config:ECCDataFailCount",     0x02010168, CHANGED_SINCE_LAST, 0u,      0u, 0u,  0xFFFFFFFFFFFFFFFFu, nop_trigger, 1u },
 };
 
-static struct HealthMonitor_Status
-{
-    HSSTicks_t throttle_startTime;
-    uint32_t lastValue;
-    size_t count;
-    bool initialized;
-} monitor_status[ARRAY_SIZE(monitors)] =
+static struct HealthMonitor_Status monitor_status[ARRAY_SIZE(monitors)] =
 {
    { 0u, 0u, 0u, false }
 };
@@ -182,7 +155,7 @@ static void healthmon_monitoring_handler(struct StateMachine * const pMyMachine)
         for (size_t i = 0u; i < ARRAY_SIZE(monitors); i++) {
             if (HSS_Timer_IsElapsed(monitor_status[i].throttle_startTime, monitors[i].throttleScale * ONE_SEC)) {
                 uint32_t value = *(uint32_t volatile *)(monitors[i].pAddr);
-                enum CheckTypeEnum checkType = monitors[i].checkType;
+                enum HealthMon_CheckType checkType = monitors[i].checkType;
                 bool triggered = false;
 
                 if (monitors[i].shift) { value = value >> monitors[i].shift; }
@@ -233,8 +206,10 @@ static void healthmon_monitoring_handler(struct StateMachine * const pMyMachine)
                 if (triggered && value != monitor_status[i].lastValue) {
                     monitor_status[i].count++;
 
-                    mHSS_DEBUG_PRINTF(LOG_ERROR, "%s %s ",
-                        monitors[i].pName, checkName[monitors[i].checkType]);
+                    if (monitors[i].checkType <= LAST_CHECKTYPE) {
+                        mHSS_DEBUG_PRINTF(LOG_ERROR, "%s %s ",
+                            monitors[i].pName, checkName[monitors[i].checkType]);
+                    }
                     HSS_Debug_Highlight(HSS_DEBUG_LOG_ERROR);
                     if (checkType != CHANGED_SINCE_LAST) {
                         mHSS_DEBUG_PRINTF_EX("0x%x ", monitors[i].maxValue);
