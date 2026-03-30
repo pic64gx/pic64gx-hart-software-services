@@ -223,14 +223,14 @@ bool tryBootFunction_(struct HSS_Storage *pStorage, HSS_GetBootImageFnPtr_t cons
     result = bootImageFunction(pStorage, &pBootImage);
     //
     // check if this image is compressed...
-    // if so, decompress it to DDR
+    // if so, decompress it
     //
     // for now, compression only works with a source already in DDR
 #  if IS_ENABLED(CONFIG_COMPRESSION)
     if (result && pBootImage && (pBootImage->magic == mHSS_COMPRESSED_MAGIC)) {
         decompressedFlag = true;
 
-        mHSS_DEBUG_PRINTF(LOG_NORMAL, "Preparing to decompress to DDR ...\n");
+        mHSS_DEBUG_PRINTF(LOG_NORMAL, "Preparing to decompress ...\n");
         void* const pInput = (void*)pBootImage;
         void * const pOutputInDDR = (void *)(CONFIG_SERVICE_BOOT_DDR_TARGET_ADDR);
 
@@ -298,7 +298,7 @@ static bool getBootImageFromMMC_(struct HSS_Storage *pStorage, struct HSS_BootIm
 
     // if we are using MMC, then we need to do an initial copy of the
     // boot header into our structure, for subsequent use
-    mHSS_DEBUG_PRINTF(LOG_NORMAL, "Preparing to copy from MMC to DDR ...\n");
+    mHSS_DEBUG_PRINTF(LOG_NORMAL, "Preparing to copy from MMC ...\n");
 
     size_t srcLBAOffset = 0u;
     assert(pStorage);
@@ -425,7 +425,7 @@ static bool getBootImageFromQSPI_(struct HSS_Storage *pStorage, struct HSS_BootI
     assert(ppBootImage);
 
     // need to do an initial copy of the boot header into our structure, for subsequent use
-    mHSS_DEBUG_PRINTF(LOG_NORMAL, "Preparing to copy from QSPI to DDR ...\n");
+    mHSS_DEBUG_PRINTF(LOG_NORMAL, "Preparing to copy from QSPI ...\n");
 
     size_t srcLBAOffset = 0u;
     assert(pStorage);
@@ -508,6 +508,64 @@ void HSS_BootSelectPayload(void)
     (void)getBootImageFromPayload_;
 #endif
 }
+
+#if IS_ENABLED(CONFIG_SERVICE_BOOT) && IS_ENABLED(CONFIG_SERVICE_SPI)
+static bool spiFlashReadBlock_(void *dst, size_t offs, size_t count) {
+   int retval = MSS_SYS_spi_copy((uintptr_t)dst, offs, count, /* options */ 3, /* mb_offset */ 0);
+
+   if (retval) {
+        mHSS_DEBUG_PRINTF(LOG_ERROR, "Failed to read 0x%lx bytes from SPI flash @0x%lx (error code %d)!\n", count, offs, retval);
+   }
+
+   return (retval == 0);
+}
+#endif
+
+static bool getBootImageFromSpiFlash_(struct HSS_Storage *pStorage, struct HSS_BootImage **ppBootImage) {
+    bool result = false;
+    (void)pStorage;
+
+#if IS_ENABLED(CONFIG_SERVICE_BOOT) && IS_ENABLED(CONFIG_SERVICE_SPI)
+
+    assert(ppBootImage);
+
+    size_t srcOffset = CONFIG_SERVICE_BOOT_SPI_FLASH_OFFSET;
+
+    mHSS_DEBUG_PRINTF(LOG_NORMAL, "Preparing to copy from SPI Flash +0x%lx ...\n", srcOffset);
+    mHSS_DEBUG_PRINTF(LOG_NORMAL, "Attempting to read image header (%d bytes) ...\n",
+        sizeof(struct HSS_BootImage));
+
+    MSS_SYS_select_service_mode(MSS_SYS_SERVICE_POLLING_MODE, NULL);
+
+    result = spiFlashReadBlock_(&bootImage, srcOffset, sizeof(struct HSS_BootImage));
+    if (!result) {
+        return false;
+    }
+
+    result = HSS_Boot_VerifyMagic(&bootImage);
+    if (!result) {
+        return false;
+    }
+
+    result = copyBootImageToDDR_(&bootImage, (char *)(CONFIG_SERVICE_BOOT_DDR_TARGET_ADDR),
+        srcOffset, spiFlashReadBlock_);
+    *ppBootImage = (struct HSS_BootImage *)(CONFIG_SERVICE_BOOT_DDR_TARGET_ADDR);
+#endif
+
+    return result;
+}
+
+void HSS_BootSelectSPI(void)
+{
+#if IS_ENABLED(CONFIG_SERVICE_SPI)
+    mHSS_DEBUG_PRINTF(LOG_NORMAL, "Selecting SPI Flash as boot source ...\n");
+    pDefaultStorage = &spiStorage_;
+    HSS_Register_Boot_Image(NULL);
+#else
+    (void)getBootImageFromSpiFlash_;
+#endif
+}
+
 
 bool HSS_Storage_Init(void);
 bool HSS_Storage_ReadBlock(void *pDest, size_t srcOffset, size_t byteCount);
