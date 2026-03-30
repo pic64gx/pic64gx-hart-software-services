@@ -1,5 +1,9 @@
 /*******************************************************************************
- * (c) Copyright 2019-2024 Microchip Technology Inc.
+
+ * (c) Copyright 2019-2026 Microchip FPGA Embedded Systems Solutions.
+
+ * (c) Copyright 2019-2026 Microchip FPGA Embedded Systems Solutions.
+
  * All rights reserved.
  *
  * SPDX-License-Identifier: MIT
@@ -25,14 +29,12 @@
  * PIC64GX Microprocessor Subsystem I2C bare metal software driver
  * public API.
  *
- * SVN $Revision$
- * SVN $Date$
  */
-/*=========================================================================*//**
+/*==================================================================*//**
   @mainpage PIC64GX MSS I2C Bare Metal Driver.
-  ==============================================================================
+  =======================================================================
   Introduction
-  ==============================================================================
+  =======================================================================
   The PIC64GX microcontroller subsystem (MSS) includes two I2C peripherals
   for serial communication. This driver provides a set of functions for
   controlling the MSS I2Cs as part of a bare metal system where no
@@ -41,9 +43,9 @@
   driver and the operating system's driver model is outside the scope of this
   driver.
 
-  ==============================================================================
+  =======================================================================
   Hardware Flow Dependencies
-  ==============================================================================
+  =======================================================================
   The configuration of all features of the MSS I2C peripherals is covered by
   this driver with the exception of the PIC64GX IOMUX configuration.
   PIC64GX allows multiple non-concurrent uses of some external pins
@@ -80,9 +82,9 @@
   constants. The interrupt number assignment for the MSS I2C peripherals are
   defined as constants in the PIC64GX HAL.
 
-  ==============================================================================
+  =======================================================================
   Theory of Operation
-  ==============================================================================
+  =======================================================================
   The MSS I2C driver functions are grouped into the following categories:
     - Initialization and configuration functions
     - Interrupt control
@@ -348,7 +350,7 @@
     The MSS_I2C_enable_smbus_irq() and MSS_I2C_disable_smbus_irq() functions are
     used to enable and disable the SMBSUS and SMBALERT SMBus interrupts.
 
- *//*=========================================================================*/
+ *//*==================================================================*/
 
 #ifndef MSS_I2C_H_
 #define MSS_I2C_H_
@@ -2103,6 +2105,10 @@ void MSS_I2C_register_transfer_completion_handler
     mss_i2c_instance_t * this_i2c,
     mss_i2c_transfer_completion_t completion_handler
 );
+
+
+bool MSS_I2C_poll_complete(mss_i2c_instance_t *this_i2c, mss_i2c_status_t *out_status);
+mss_i2c_status_t MSS_I2C_poll(mss_i2c_instance_t *this_i2c);
 
 #ifdef __cplusplus
 }
