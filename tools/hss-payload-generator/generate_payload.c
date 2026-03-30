@@ -443,7 +443,7 @@ void generate_payload(char const * const filename_output, char const * const pri
 	assert(filename_output);
 	printf("Output filename is >>%s<<\n", filename_output);
 
-	FILE *pFileOut = fopen(filename_output, "w+");
+	FILE *pFileOut = fopen(filename_output, "wb+");
 	if (!pFileOut) {
 		perror("fopen()");
 		exit(EXIT_FAILURE);
