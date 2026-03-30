@@ -146,6 +146,11 @@ const struct IPI_Handler ipiRegistry[] = {
     { IPI_MSG_WDOG_INIT,         HSS_Null_IPIHandler },
 #endif
     { IPI_MSG_GPIO_SET,          HSS_Null_IPIHandler },
+#if IS_ENABLED(CONFIG_SERVICE_POWERMODE)
+    { IPI_MSG_POWERMODE,         HSS_Null_IPIHandler },
+#else
+    { IPI_MSG_POWERMODE,         HSS_Null_IPIHandler },
+#endif
     { IPI_MSG_ACK_PENDING,       IPI_ACK_IPIHandler },
     { IPI_MSG_ACK_COMPLETE,      IPI_ACK_IPIHandler },
     { IPI_MSG_HALT,              HSS_Null_IPIHandler },
