@@ -159,7 +159,7 @@ static void __attribute__((__noreturn__)) pic64gx_system_reset(u32 reset_type, u
     hart_ledger[hartid].reset_type = reset_type;
 
     /* re-enable IPIs */
-    csr_write(CSR_MSTATUS, MIP_MSIP);
+    csr_set(CSR_MSTATUS, MSTATUS_MIE);
     csr_write(CSR_MIE, MIP_MSIP);
 
     sbi_exit(scratch);
@@ -383,7 +383,7 @@ static int pic64gx_timer_init(bool cold_boot)
 static void pic64gx_final_exit(void)
 {
     /* re-enable IPIs */
-    csr_write(CSR_MSTATUS, MIP_MSIP);
+    csr_set(CSR_MSTATUS, MSTATUS_MIE);
     csr_write(CSR_MIE, MIP_MSIP);
 }
 
@@ -598,7 +598,7 @@ static int pic64gx_hart_stop(void)
     void (*jump_warmboot)(void) = (void (*)(void))scratch->warmboot_addr;
 
     /* re-enable IPIs */
-    csr_write(CSR_MSTATUS, MIP_MSIP);
+    csr_set(CSR_MSTATUS, MSTATUS_MIE);
     csr_write(CSR_MIE, MIP_MSIP);
 
     if (hart_ledger[hartid].owner_hartid == hartid && hart_ledger[hartid].boot_pending) {
