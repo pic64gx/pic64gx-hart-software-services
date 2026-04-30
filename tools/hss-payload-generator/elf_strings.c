@@ -2,7 +2,11 @@
  *
  * PIC64GX HSS Embedded Software - tools/hss-payload-generator
  *
- * Copyright 2020-2026 Microchip Technology Inc.
+
+ * Copyright 2020-2026 Microchip FPGA Embedded Systems Solutions.
+
+ * Copyright 2020-2026 Microchip FPGA Embedded Systems Solutions.
+
  *
  * SPDX-License-Identifier: MIT
  *
