@@ -2,7 +2,7 @@
  *
  * PIC64GX HSS Embedded Software - tools/hss-payload-generator
  *
- * Copyright 2020-2022 Microchip Technology Inc.
+ * Copyright 2020-2026 Microchip Technology Inc.
  *
  * SPDX-License-Identifier: MIT
  *
