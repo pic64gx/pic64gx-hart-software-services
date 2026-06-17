@@ -165,7 +165,7 @@ void hss_loader_ymodem_loop(void)
 
         mHSS_PUTS(menuText);
 
-        if (uart_getchar(&rx_byte, -1, false)) {
+        if (uart_getchar(HSS_HART_E51, &rx_byte, -1, false)) {
             switch (rx_byte) {
 #if IS_ENABLED(CONFIG_SERVICE_QSPI)
             case '1':

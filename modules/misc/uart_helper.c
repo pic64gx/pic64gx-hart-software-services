@@ -149,7 +149,7 @@ ssize_t uart_getline(char **pBuffer, size_t *pBufLen)
     return result;
 }
 
-bool uart_getchar(uint8_t *pbuf, int32_t timeout_sec, bool do_sec_tick)
+bool uart_getchar(int hartid, uint8_t *pbuf, int32_t timeout_sec, bool do_sec_tick)
 {
     bool result = false;
     bool done = false;
@@ -161,7 +161,7 @@ bool uart_getchar(uint8_t *pbuf, int32_t timeout_sec, bool do_sec_tick)
 
     const HSSTicks_t timeout_ticks = timeout_sec * TICKS_PER_SEC;
 
-    mss_uart_instance_t *pUart = HSS_UART_GetInstance(HSS_HART_E51);
+    mss_uart_instance_t *pUart = HSS_UART_GetInstance(hartid);
 
     while (!done) {
         size_t received = MSS_UART_get_rx(pUart, rx_buff, 1u);

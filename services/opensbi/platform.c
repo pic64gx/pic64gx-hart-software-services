@@ -242,10 +242,11 @@ static void pic64gx_console_putc(char ch)
 static int pic64gx_console_getc(void)
 {
     int result = GETC_EOF;
-    bool uart_getchar(uint8_t *pbuf, int32_t timeout_sec, bool do_sec_tick);
+    u32 hartid = current_hartid();
+    bool uart_getchar(int hartid, uint8_t *pbuf, int32_t timeout_sec, bool do_sec_tick);
 
     uint8_t rcvBuf;
-    if (uart_getchar(&rcvBuf, NO_BLOCK, FALSE)) {
+    if (uart_getchar(hartid, &rcvBuf, NO_BLOCK, FALSE)) {
         result = rcvBuf;
     }
 
