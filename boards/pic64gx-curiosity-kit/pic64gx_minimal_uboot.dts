@@ -95,25 +95,22 @@
 			status = "okay";
 		};
 
-		mac1: ethernet@20112000 {
+		mac0: ethernet@20110000 {
 			compatible = "microchip,pic64gx-macb", "microchip,mpfs-macb", "cdns,macb";
-			reg = <0x00 0x20112000>, <0x00 0x2000>;
+			reg = <0x00 0x20110000 0x00 0x2000>;
 			#address-cells = <0x01>;
 			#size-cells = <0x00>;
 			interrupt-parent = <&plic>;
-			interrupts = <0x46 0x47 0x48 0x49 0x4a 0x4b>;
+			interrupts = <0x40 0x41 0x42 0x43 0x44 0x45>;
 			local-mac-address = [00 00 00 00 00 00];
-			clocks = <&clkcfg 0x05>, <&clkcfg 0x02>;
+			clocks = <&clkcfg 0x04>, <&clkcfg 0x02>;
 			clock-names = "pclk", "hclk";
 			status = "okay";
 			phy-mode = "sgmii";
-			phy-handle = <0x07>;
-			ethernet-phy@9 {
-				reg = <0x09>;
-				phandle = <0x07>;
-			};
-			ethernet-phy@8 {
-				reg = <0x08>;
+			phy-handle = <0x17>;
+			ethernet-phy@b {
+				reg = <0x0b>;
+				phandle = <0x17>;
 			};
 		};
 
@@ -136,7 +133,7 @@
 	};
 
 	aliases {
-		ethernet0 = "/soc/ethernet@20112000";
+		ethernet0 = "/soc/ethernet@20110000";
 		serial1 = "/soc/serial@20100000";
 	};
 
