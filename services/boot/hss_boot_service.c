@@ -274,8 +274,7 @@ static void boot_do_download_chunk(struct HSS_BootChunkDesc const *pChunk, ptrdi
 
     const uintptr_t execAddr = (uintptr_t)pChunk->execAddr + subChunkOffset;
     const uintptr_t loadAddr = (uintptr_t)pBootImage + (uintptr_t)pChunk->loadAddr + subChunkOffset;
-    const size_t actualSize = MIN(subChunkSize, pChunk->size - subChunkOffset);
-    memcpy_via_pdma((void *)execAddr, (void*)loadAddr, actualSize);
+    memcpy_via_pdma((void *)execAddr, (void*)loadAddr, subChunkSize);
 }
 
 static void boot_do_zero_init_chunk(struct HSS_BootZIChunkDesc const *pZiChunk)
@@ -599,7 +598,7 @@ static void boot_download_chunks_handler(struct StateMachine * const pMyMachine)
 
 #ifdef BOOT_SUB_CHUNK_SIZE
                 pInstanceData->subChunkOffset += BOOT_SUB_CHUNK_SIZE;
-                if (pInstanceData->subChunkOffset >= pChunk->size) {
+                if (pInstanceData->subChunkOffset > pChunk->size) {
 #  if IS_ENABLED(CONFIG_DEBUG_CHUNK_DOWNLOADS)
                     mHSS_DEBUG_PRINTF(LOG_NORMAL, "%s::%d:sub-chunk finished at 0x%x\n",
                         pMyMachine->pMachineName, pInstanceData->chunkCount, pInstanceData->subChunkOffset);
@@ -1207,7 +1206,7 @@ bool HSS_Boot_Custom(void)
             boot_do_download_chunk(pChunk, subChunkOffset, BOOT_SUB_CHUNK_SIZE);
 
             subChunkOffset += BOOT_SUB_CHUNK_SIZE;
-            if (subChunkOffset >= pChunk->size) {
+            if (subChunkOffset > pChunk->size) {
                 subChunkOffset = 0u;
                 chunkNum++;
                 pChunk++;
