@@ -995,11 +995,8 @@ enum IPIStatusCode HSS_Boot_IPIHandler(TxId_t transaction_id, enum HSSHartId sou
     */
 #if IS_ENABLED(CONFIG_SERVICE_OPENSBI_RPROC) || IS_ENABLED(CONFIG_SERVICE_OPENSBI_RPROC_IPC)
     if (immediate_arg == RPROC_BOOT) {
-        if (p_extended_buffer_in_ddr == NULL
-                || !HSS_DDR_IsAddrInDDR((uintptr_t)p_extended_buffer_in_ddr)
-                || !HSS_DDR_IsAddrInDDR((uintptr_t)p_extended_buffer_in_ddr
-                                        + sizeof(struct RemoteProcMsg))) {
-            mHSS_DEBUG_PRINTF(LOG_ERROR, "HSS_Boot_IPIHandler: rproc buffer not in DDR\n");
+        if (p_extended_buffer_in_ddr == NULL) {
+            mHSS_DEBUG_PRINTF(LOG_ERROR, "HSS_Boot_IPIHandler: rproc buffer is NULL\n");
             return IPI_FAIL;
         }
 
