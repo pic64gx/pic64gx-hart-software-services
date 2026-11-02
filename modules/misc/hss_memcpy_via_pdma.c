@@ -17,6 +17,7 @@
 #include "hss_types.h"
 #include "hss_debug.h"
 #include "hss_memcpy_via_pdma.h"
+#include "hss_atomic.h"
 
 #include <assert.h>
 #include <string.h>
@@ -98,5 +99,23 @@ void *memcpy_via_pdma(void *dest, void const *src, size_t num_bytes)
     }
 
     //mHSS_DEBUG_PRINTF(LOG_NORMAL, "Copy from %p to %p (%x bytes)\n", src, dest, num_bytes);
-    return do_memcpy_via_pdma_(dest, src, num_bytes);
+
+    // PDMA requires a multiple of 16 bytes, so copy the bulk via PDMA and
+    // only the remaining tail (if any) via the CPU, rather than falling back
+    // to memcpy() for the entire transfer
+    size_t const tail_bytes = num_bytes & 0xFu;
+    size_t const bulk_bytes = num_bytes - tail_bytes;
+
+    if (bulk_bytes) {
+        (void)do_memcpy_via_pdma_(dest, src, bulk_bytes);
+    }
+
+    if (tail_bytes) {
+        (void)memcpy((char *)dest + bulk_bytes, (char const *)src + bulk_bytes, tail_bytes);
+    }
+
+    // ensure CPU stores are ordered before any subsequent release of other harts
+    mb();
+
+    return dest;
 }

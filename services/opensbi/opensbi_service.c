@@ -198,6 +198,12 @@ void __noreturn HSS_OpenSBI_DoBoot(enum HSSHartId hartid)
 
     opensbi_scratch_setup(hartid);
     pic64gx_mark_hart_as_booted(hartid);
+
+    // boot image was downloaded by the E51. FENCE.I is hart-local, so this
+    // hart must flush its own I$ before executing the downloaded code
+    mb();
+    mb_i();
+
     sbi_init(&(pScratches[hartid].scratch));
 
     // should never be reached...
