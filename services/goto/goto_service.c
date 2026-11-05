@@ -143,6 +143,11 @@ enum IPIStatusCode HSS_GOTO_IPIHandler(TxId_t transaction_id, enum HSSHartId sou
             const uint32_t next_mode = immediate_arg;
             HSS_U54_SetState(HSS_State_Running);
 
+            // boot image may have been downloaded by the E51. FENCE.I is hart-local,
+            // so this hart must flush its own I$ before executing the downloaded code
+            mb();
+            mb_i();
+
 #if IS_ENABLED(CONFIG_OPENSBI)
             sbi_hart_switch_mode(hartid, (unsigned long)p_ancilliary_buffer_in_ddr,
                 (unsigned long)p_extended_buffer, next_mode, false /*next_virt -> required hypervisor */);
